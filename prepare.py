@@ -23,7 +23,7 @@ def extract_letter_rows(picture):
     current_range = []
     visited_eh = False
 
-    for i in range(len(picture_arr)):
+    for i, row in enumerate(picture_arr):
         row = picture_arr[i]
         avg = np.average(row)
 
@@ -58,17 +58,33 @@ def extract_letter_rows(picture):
 
 
 def extract_letters_from_row(row_image):
-    h, w = np.array(row_image).shape
+    rows = np.array(row_image)
+    h, w = rows.shape
+    white_line_avg = 250
 
-    prev = 0
     letters = []
+    letter_ranges = []
+    current_range = []
 
-    for i in range(0, w, 12):
-        if i == 0:
+    for i in range(0, w):
+        avg = np.average(rows[:, i])
+
+        if avg > white_line_avg and len(current_range) == 0:
             continue
 
-        bounds = (prev, 0, i, h)
+        if avg < white_line_avg and len(current_range) == 0:
+            current_range.append(i)
+            continue
+
+        if avg > white_line_avg and len(current_range) == 1:
+            current_range.append(i)
+            letter_ranges.append(current_range)
+            current_range = []
+
+    for letter_range in letter_ranges:
+        bounds = (letter_range[0], 0, letter_range[1], h)
+
         letters.append(row_image.crop(bounds))
-        prev = i
 
     return letters
+

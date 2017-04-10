@@ -1,4 +1,5 @@
 import numpy as np
+
 from PIL import Image
 
 from prepare import extract_letter_rows, transform_to_array, extract_letters_from_row
@@ -26,12 +27,14 @@ def transform_to_grayscale(picture):
 img = read_picture('./res/table.jpg')
 img = transform_to_grayscale(img)
 
-row_pics = extract_letter_rows(img)[::10]
+row_pics = extract_letter_rows(img)
+row = row_pics[-1]
 
-for p in row_pics:
-    p.show()
+row.show()
 
-# letters = extract_letters_from_row(pic)
-#
-# for lt in letters:
-#     lt.show()
+letters = extract_letters_from_row(row)
+
+print(len(letters))
+
+for lt in letters:
+    lt.show()
