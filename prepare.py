@@ -61,6 +61,7 @@ def extract_letters_from_row(row_image):
     rows = np.array(row_image)
     h, w = rows.shape
     white_line_avg = 250
+    max_letters = 40
 
     letters = []
     letter_ranges = []
@@ -73,13 +74,21 @@ def extract_letters_from_row(row_image):
             continue
 
         if avg < white_line_avg and len(current_range) == 0:
-            current_range.append(i)
+            current_range.append(i - 2)
             continue
 
         if avg > white_line_avg and len(current_range) == 1:
-            current_range.append(i)
+            current_range.append(i + 2)
             letter_ranges.append(current_range)
             current_range = []
+
+    if len(letter_ranges) > max_letters:
+        min_len = np.unique(map(lambda r: r[1] - r[0], letter_ranges))
+        letter_ranges = filter(lambda r: r[1] - r[0] > min_len[0], letter_ranges)
+        print("Shortened, {}".format(min_len))
+    else:
+        min_len = np.unique(map(lambda r: r[1] - r[0], letter_ranges))
+        print("Keeped, {}".format(min_len))
 
     for letter_range in letter_ranges:
         bounds = (letter_range[0], 0, letter_range[1], h)
