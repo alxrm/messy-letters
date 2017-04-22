@@ -7,3 +7,4 @@ def last_index_match(collection, predicate):
 
     return last
 
+
