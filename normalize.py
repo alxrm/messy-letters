@@ -1,13 +1,13 @@
 import numpy as np
 
-from utils.misc import shift_round, insert_list_at_index, matrix_to_array
+from utils.images import pad_to_size
+from utils.misc import shift_round, insert_list_at_index
 
 
 class Normalizer:
     def __init__(self,
                  letter_sequence: list,
                  approx_row_size: int = 40,
-                 exact_row_sizes: list = None,
                  whiteness_limit: int = 250,
                  whiteness_trim_width_scale: float = 0.8,
                  height_bias: float = 1.5,
@@ -28,8 +28,6 @@ class Normalizer:
 
         self.mean_w = self._means[0]
         self.mean_h = self._means[1]
-        self.row_sizes = exact_row_sizes if exact_row_sizes is not None \
-            else [len(row) for row in self._approx_letter_matrix(self._raw_sequence)]
 
     def _letter_means(self):
         widths = []
@@ -51,23 +49,6 @@ class Normalizer:
             if (i + 1) % self._approx_row_size == 0 or i == len(letter_sequence) - 1:
                 all_lines.append(line)
                 line = []
-
-        return all_lines
-
-    def _exact_letter_matrix(self, letter_sequence):
-        default_size = np.mean(self.row_sizes)
-        line = []
-        all_lines = []
-        line_counter = 0
-
-        for i, lt in enumerate(letter_sequence):
-            line.append(lt)
-            row_size = self.row_sizes[line_counter] if line_counter < len(self.row_sizes) else default_size
-
-            if len(line) == row_size or i == len(letter_sequence) - 1:
-                all_lines.append(line)
-                line = []
-                line_counter += 1
 
         return all_lines
 
@@ -196,7 +177,7 @@ class Normalizer:
 
         return letter_mtx
 
-    def normalized_letter_matrix(self):
+    def normalized_letter_sequence(self):
         filtered = self._filter_out_small_width(self._raw_sequence)
         filtered = self._filter_out_small_height(filtered)
 
@@ -204,6 +185,7 @@ class Normalizer:
         approx_mtx = self._normalize_letters_by_height(approx_mtx)
         approx_mtx = self._normalize_letters_by_width(approx_mtx)
 
-        result_sequence = matrix_to_array(approx_mtx)
+        result_sequence = np.reshape(approx_mtx, -1)
+        result_sequence = [pad_to_size(letter) for letter in result_sequence]
 
-        return self._exact_letter_matrix(result_sequence)
+        return result_sequence

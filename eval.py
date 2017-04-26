@@ -6,3 +6,4 @@ from PIL import Image
 
 import misc
 
+from recognize import LetterRecognizer
