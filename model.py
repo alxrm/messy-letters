@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.svm import SVC
+from sklearn.externals import joblib
 
 
 class LetterClassifier:
@@ -10,11 +11,11 @@ class LetterClassifier:
     def _transform(images):
         return [np.array(img, dtype='float') for img in images]
 
-    def load(self):
-        pass
+    def load(self, dump_filename='clf.pkl'):
+        self.classifier = joblib.load(dump_filename)
 
-    def save(self):
-        pass
+    def save(self, dump_filename='clf.pkl'):
+        joblib.dump(self.classifier, dump_filename)
 
     def fit(self, images, labels):
         vectorized = self._transform(images)
