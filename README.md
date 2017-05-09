@@ -1,4 +1,4 @@
-# russian-letters-classifier
+# Messy letters classification
 [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)]()
 
 ### Story
