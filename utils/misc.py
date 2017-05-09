@@ -15,6 +15,15 @@ def insert_list_at_index(to, which, index, with_exclude=False):
     return to[:index] + which + to[index + 1 if with_exclude is True else 0:]
 
 
+def flat_matrix(mtx):
+    res = []
+
+    for r in mtx:
+        res += r
+
+    return res
+
+
 def partition_by_sizes(sequence, sub_sequence_sizes, default_size=40):
     default_size = default_size if sub_sequence_sizes is None else np.mean(sub_sequence_sizes)
     line = []

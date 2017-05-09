@@ -1,7 +1,7 @@
 import numpy as np
 
 from utils.images import pad_to_size
-from utils.misc import shift_round, insert_list_at_index
+from utils.misc import shift_round, insert_list_at_index, flat_matrix
 
 
 class Normalizer:
@@ -177,7 +177,7 @@ class Normalizer:
 
         return letter_mtx
 
-    def normalized_letter_sequence(self):
+    def normalized_letters(self):
         filtered = self._filter_out_small_width(self._raw_sequence)
         filtered = self._filter_out_small_height(filtered)
 
@@ -185,7 +185,7 @@ class Normalizer:
         approx_mtx = self._normalize_letters_by_height(approx_mtx)
         approx_mtx = self._normalize_letters_by_width(approx_mtx)
 
-        result_sequence = np.reshape(approx_mtx, -1)
+        result_sequence = flat_matrix(approx_mtx)
         result_sequence = [pad_to_size(letter) for letter in result_sequence]
 
         return result_sequence

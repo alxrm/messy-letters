@@ -12,10 +12,10 @@ class LetterClassifier:
     def _transform(images):
         return [np.array(img, dtype='float') for img in images]
 
-    def load(self, dump_filename='clf.pkl'):
+    def load(self, dump_filename='model.dmp'):
         self.classifier = joblib.load(dump_filename)
 
-    def save(self, dump_filename='clf.pkl'):
+    def save(self, dump_filename='model.dmp'):
         joblib.dump(self.classifier, dump_filename)
 
     def fit(self, images, labels):
